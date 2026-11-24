@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>帳號密碼 + 生物識別</title>
+  <style>
+    body { font-family: system-ui, "Noto Sans TC", sans-serif; max-width: 440px; margin: 40px auto; padding: 0 16px; color: #202124; }
+    fieldset { border: 1px solid #dadce0; border-radius: 12px; padding: 16px; margin-bottom: 20px; }
+    legend { font-weight: 600; padding: 0 6px; }
+    input, button { width: 100%; padding: 12px; margin: 6px 0; font-size: 16px; box-sizing: border-box; border-radius: 8px; }
+    input { border: 1px solid #dadce0; }
+    button { cursor: pointer; border: 0; background: #1a73e8; color: #fff; }
+    button.alt { background: #188038; }
+    button.secondary { background: #5f6368; }
+    .hint { font-size: 13px; color: #5f6368; margin: 4px 0 0; }
+    .divider { text-align: center; color: #5f6368; margin: 8px 0; font-size: 14px; }
+    #msg { margin: 12px 0; white-space: pre-wrap; }
+    .ok { color: #188038; } .err { color: #d93025; }
+    table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    td, th { border-bottom: 1px solid #eee; padding: 6px 4px; text-align: left; }
+  </style>
+</head>
+<body>
+  <h1>🔐 帳號密碼 + 生物識別</h1>
+  <div id="msg"></div>
+
+  <div id="loggedOut">
+    <fieldset>
+      <legend>建立帳號</legend>
+      <input id="suUser" placeholder="帳號" autocomplete="username" />
+      <input id="suPass" type="password" placeholder="密碼（至少 8 字元）" autocomplete="new-password" />
+      <input id="suPass2" type="password" placeholder="確認密碼" autocomplete="new-password" />
+      <!-- 步驟 1：送出帳號密碼，伺服器檢查後回傳 WebAuthn 選項 -->
+      <button id="btnSignupNext">下一步</button>
+      <!-- 步驟 2：選項已備妥，按下後直接呼叫 create()（符合 Safari 使用者手勢要求） -->
+      <div id="signupStep2" hidden>
+        <p class="hint">帳號密碼檢查通過，請完成生物識別以建立帳號。</p>
+        <button id="btnSignupBio" class="alt">👆 驗證生物識別並建立帳號</button>
+        <button id="btnSignupBack" class="secondary">返回修改</button>
+      </div>
+      <p class="hint">需通過指紋／Face ID／Windows Hello 驗證，帳號才會建立。</p>
+    </fieldset>
+
+    <fieldset>
+      <legend>登入</legend>
+      <button id="btnPasskey" class="alt">👆 用生物識別登入</button>
+      <div class="divider">或</div>
+      <input id="liUser" placeholder="帳號" autocomplete="username" />
+      <input id="liPass" type="password" placeholder="密碼" autocomplete="current-password" />
+      <button id="btnPassword">用密碼登入</button>
+    </fieldset>
+  </div>
+
+  <div id="loggedIn" hidden>
+    <fieldset>
+      <legend>歡迎，<span id="who"></span></legend>
+      <p>已綁定的生物識別裝置：</p>
+      <table><thead><tr><th>裝置</th><th>綁定時間</th><th>最後使用</th></tr></thead><tbody id="devices"></tbody></table>
+      <button id="btnAddDevice" class="alt">在這台裝置加綁生物識別</button>
+      <button id="btnLogout" class="secondary">登出</button>
+    </fieldset>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
